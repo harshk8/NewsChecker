@@ -1,0 +1,164 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Dashboard{% endblock %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://jqueryui.com/resources/demos/style.css">
+{% endblock %}
+
+
+{% block content %}
+{% for msg in messages %}
+<div class="alert alert-success show_msg" role="alert">
+    <strong>{{msg}}</strong>
+</div>
+{% endfor %}
+
+<!-- Top Heading section start -->
+<div class="row m-0 pt-2">
+    <div class="col-md-6 col-lg-6 col-12">
+        <div class="top-right-sec text-center text-md-left text-xl-left justify-content-between pt-2">
+            <h3 class="text-black">Dashboard</h3>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-12 text-center text-md-right text-xl-right d-flex align-items-center justify-content-end top-right-sec">
+        <div class="customer-options">
+             <a class="px-2 py-1 mr-2 dafault-link"  data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                <i class="fa fa-search" aria-hidden="true"></i> Search
+            </a>
+
+        </div>
+
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body py-2 px-2">
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <h6 class="m-0">Search</h6>
+                        <a href="#" class="main-color">Clear all</a>
+                    </div>
+                <div class="form-inline my-2 my-lg-0">
+                    <form action="." method="POST">
+                        {% csrf_token %}
+
+                    <input class="form-control" type="text" placeholder="Search" aria-label="Search" name="search" id="search" required="">
+                        
+                    <div class="pl-2 mt-2 text-left">
+                        <div class="py-2">
+                        <label class="form-control-label" for="fromDate">From Date</label>
+                        <input type="text" name="fromDate" id="datepicker1" class="form-control"/>
+
+                        <label class="form-control-label" for="toDate">To Date</label>
+                        <input type="text" name="toDate" id="datepicker2"  class="form-control" />
+
+
+                         <label class="form-control-label" for="category">Category</label>
+                            <select id="category" name="category" class="form-control" style="width: 100%;" required="">
+                                <option id='' selected>  </option>
+                                {% for cat in category_list %}
+                                    <option id={{cat.title_slug}}>{{cat.title}}</option>
+                                {% endfor %}
+                            </select>
+                            
+                        </div>
+                        <div class="custom-control py-2">
+                            <input type="submit" name="Search" class="form-control">
+
+                        </div>
+                    </div>
+                    </form>
+                </div>
+                </div>
+            </div>
+    </div>
+</div>
+<!-- Top Heading section end -->
+
+<div class="customer-details">
+    <div class="row m-0 my-4">
+        <div class="col-12 col-md-12 col-lg-12">
+            <div class="customer-table shadow-lg mt-2 p-4">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Dated</th>
+                                <th scope="col">Author</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for news in object_list %}
+                                <tr>
+                                    <td><a href="{% url 'get-news' news.title_slug %}">  {{news.title}} </a> </td>
+                                    <td>{% if news.date %} 
+                                            {{ news.date | naturaltime }}
+                                        {% else %} 
+                                            {{news.created_at}}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{news.author}}
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>No News Found.</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- pagination for list items -->
+{% if is_paginated %}
+    <div class="px-3 mt-5">
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            {% if page_obj.has_previous %}
+                <li class="page-item disabled">
+                    <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">Prev</a></li>
+                </li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+        </nav>
+    </div>
+{% endif %}
+<!-- End for pagination list-->
+
+{% endblock %}
+
+{% block js %}
+
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+<script>
+
+      $(function () {
+        $( "#datepicker1" ).datepicker();
+        $( "#datepicker2" ).datepicker();
+          });
+
+</script>
+{% endblock %}

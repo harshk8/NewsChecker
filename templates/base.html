@@ -1,0 +1,134 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link rel="stylesheet" href="{% static 'plugins/css/bootstrap.min.css' %}">
+        <link rel="stylesheet" href="{% static 'css/custom.css' %}">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+
+        {% block page_level_plugins %}{% endblock %}
+    </head>
+    <body class="nav-fixed">
+        <!-- Header start -->
+        <header>
+            <div class="top-header fixed-top">
+                <div class="row navbar navbar-expand-lg m-0">
+                    <div class="col-md-4 col-lg-4 col-2 text-left p-0">
+                    </div>
+                    <div class="col-md-8 col-lg-8 col-8 d-flex align-items-center justify-content-end">
+                        {% if request.user.is_authenticated %}
+                        <ul class="navbar-nav justify-content-end">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    {% if request.user.profile %}
+                                        <img src="{{request.user.profile.url}}" width="100%">
+                                    {% else %}
+                                        <img src="{% static 'images/User_ring.png' %}" width="100%">
+                                    {% endif %}
+                                </a>
+                                <div class="dropdown-menu border-0" aria-labelledby="navbarDropdown">
+                                    <div class="dropdown-header text-center">
+                                        <div class="usr-img">
+                                            {% if request.user.profile %}
+                                                <img src="{{request.user.profile.url}}" width="100%">
+                                            {% else %}
+                                                <img src="{% static 'images/User_ring.png' %}" width="100%">
+                                            {% endif %}
+                                            </div>
+                                        <p class="mb-1 mt-3 font-weight-semibold">{{request.user}}</p>
+                                        <p class="font-weight-light text-muted mb-0">{{request.user.email}}</p>
+                                    </div>
+                                    <hr>
+                                    
+
+                                    <a class="dropdown-item d-flex align-items-center justify-content-between py-2" href="{% url 'news-my-preference' %}">My Preference 
+                                        <i class="fa"></i>
+                                    </a>
+
+                                    <a class="dropdown-item d-flex align-items-center justify-content-between py-2" href="{% url 'news-notification-list' %}">Notifications 
+                                        <i class="fa notification-count">  </i>
+                                    </a>
+
+                                    <a class="dropdown-item d-flex align-items-center justify-content-between py-2" href="{% url 'account_logout' %}">Sign Out 
+                                        <i class="fa fa-sign-out"></i>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        {% else %}
+                            <a href="{% url 'account_login' %}">sign in</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Header End -->
+
+        <!-- Sidemenu start -->
+        <nav class="sidebar" id="mySidenav">
+            <div class="navbar-brand text-center pb-2">
+                <span>
+                    <i class="fa fa-info-circle"></i>
+                    <span><i class="fa fa-info-circle"></i><img src="{% static 'images/logo.png' %}" width="80%"></span>
+                </span>
+            </div>
+
+            <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'user-dashboard' %}"><i class="fa fa-tachometer" aria-hidden="true"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'news-category' %}"><i class="fa fa-file-text" aria-hidden="true"></i><span>Category</span></a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'news-notification-list' %}"><i class="fa fa-cogs" aria-hidden="true"></i><span>Notification</span></a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'news-my-preference' %}"><i class="fa fa-cogs" aria-hidden="true"></i><span>My Preference</span></a>
+                    </li>
+                    {% endif %}
+            </ul>
+        </nav>
+        <!-- Sidemenu end -->
+
+        <!-- Main section start -->
+        <section id="browser" class="main-section">
+            {% block content %}{% endblock %}
+        </section>
+        <!-- Main section end -->
+    </body>
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="{% static 'plugins/js/jquery-3.4.1.min.js' %}"></script>
+    <script src="{% static 'plugins/js/popper.min.js' %}"></script>
+    <script src="{% static 'plugins/js/bootstrap.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+    <script type="text/javascript">
+
+        $(document).ready(function(){
+
+            let url = 'http://localhost:8000/news/notification/';
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: {'username': "{{request.user.username}}" },
+                success: function(result) {
+                    
+                        $('.notification-count').text(result.notification);
+                    
+                    }
+                });
+            });
+    </script>
+    {% block js %}{% endblock %}
+</html>

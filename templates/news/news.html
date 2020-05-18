@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+
+{% block title %}News {% endblock %}
+
+
+{% block content %}
+{% for msg in messages %}
+<div class="alert alert-success show_msg" role="alert">
+    <strong>{{msg}}</strong>
+</div>
+{% endfor %}
+<!-- Top Heading section start -->
+<div class="row m-0 pt-2">
+    <div class="col-md-6 col-lg-6 col-12">
+        <div class="top-right-sec text-center text-md-left text-xl-left justify-content-between pt-2">
+            <h3 class="text-black">News</h3>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-12 text-center text-md-right text-xl-right d-flex align-items-center justify-content-end top-right-sec">
+        <div class="customer-options">
+            
+        </div>
+    </div>
+</div>
+<!-- Top Heading section end -->
+
+<div class="customer-details">
+    <div class="row">
+        <div class="col-12">
+          Title: {{object.title}}
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-6">
+            Author: {{object.author}}
+        </div>
+        <div class="col-6">
+            Dated: 
+            {% if object.date %} 
+                {{object.date | naturaltime }}
+            {% else %}
+                {{object.created_at | naturaltime }}
+            {% endif %}
+
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-12">
+          <img src={{object.relavent_image}}  style="height: 200px; width: auto;">
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            Description: {{object.description}}
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('.show_msg').fadeOut(3000)
+    });
+    </script>
+{% endblock %}

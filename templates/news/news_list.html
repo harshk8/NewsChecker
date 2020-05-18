@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}Category{% endblock %}
+
+
+{% block content %}
+{% for msg in messages %}
+<div class="alert alert-success show_msg" role="alert">
+    <strong>{{msg}}</strong>
+</div>
+{% endfor %}
+<!-- Top Heading section start -->
+<div class="row m-0 pt-2">
+    <div class="col-md-6 col-lg-6 col-12">
+        <div class="top-right-sec text-center text-md-left text-xl-left justify-content-between pt-2">
+            <h3 class="text-black">Category</h3>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6 col-12 text-center text-md-right text-xl-right d-flex align-items-center justify-content-end top-right-sec">
+        <div class="customer-options">
+             
+
+        {% if request.user %}
+
+               <a href="#" class="px-2 py-1 mr-2 dafault-link">
+                    <form method="POST" action="{% url 'user-add-preference' category.title_slug %}">
+                        {% csrf_token %}
+                        <i class="fa fa-trash pr-2" aria-hidden="true"></i>
+                        <input type="submit" value="Add Preference" class="add">
+                    </form>
+                </a>
+        {% endif %}
+        </div>
+
+    </div>
+</div>
+<!-- Top Heading section end -->
+
+<div class="customer-details">
+    <div class="row m-0 my-4">
+        <div class="col-12 col-md-12 col-lg-12">
+            <div class="customer-table shadow-lg mt-2 p-4">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Category</th>
+                                <th scope="col">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for category in object_list %}
+                                <tr>
+                                    <td>  {{category.title}}</td>
+                                    <td>
+                                        <div class="dropdown">
+                                            <a class="dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                <i class="fa fa-ellipsis-h" aria-hidden="true"></i>
+                                            </a>
+                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                
+
+                                                <a class="dropdown-item" href="{#% url 'set_permissions' staff.pk %}"><i class="fa fa-lock pr-2" aria-hidden="true"></i>Assign</a>
+
+                                                <a class="dropdown-item" href="{#% url 'staff_detail' staff.pk %}"><i class="fa fa-eye pr-2" aria-hidden="true"></i>View</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td>No News Found.</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- pagination for list items -->
+{% if is_paginated %}
+    <div class="px-3 mt-5">
+        <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            {% if page_obj.has_previous %}
+                <li class="page-item disabled">
+                    <li><a href="?page={{ page_obj.previous_page_number }}" class="page-link">Prev</a></li>
+                </li>
+            {% endif %}
+            {% for i in paginator.page_range %}
+                {% if page_obj.number == i %}
+                <li class="page-item active"><a class="page-link" href="#">{{ i }}</a></li>
+                {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                </li>
+            {% endif %}
+        </ul>
+        </nav>
+    </div>
+{% endif %}
+<!-- End for pagination list-->
+
+{% endblock %}
+
+{% block js %}
+<script>
+    $(document).ready(function(){
+        $('.show_msg').fadeOut(3000)
+    });
+    </script>
+{% endblock %}
