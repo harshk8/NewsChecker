@@ -21,10 +21,13 @@ Description: This is a basic news Fetcher application for fetch and check the au
 4. Now run migrations:
 	// python manage.py migrate
 
-5. After that load all the predefined Categories: 
+5. Now run collect static:
+	// python manage.py collectstatic
+
+6. After that load all the predefined Categories: 
 	// python manage.py loaddata news/fixtures/news_category.json 
 
-6. Now run last step to start server:
+7. Now run last step to start server:
 	// python manage.py runserver
 
 
@@ -48,7 +51,3 @@ Description: This is a basic news Fetcher application for fetch and check the au
 	#Fetch News function process should run in background using celery
 	#Signal should be use on behalf of direct wirting code inside the function.
 	#A cronjob can be run in a periodic time so latest news can be generate fast.
-
-#Current Issues: 
-
-	##Allauth login page is not working.
