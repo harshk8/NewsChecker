@@ -1,4 +1,4 @@
-
+This is a test application given by one of the reputted company of India, and I cleared their one of the test this repo is the example of it.
 
 Description: This is a basic news Fetcher application for fetch and check the authenticity of news.
 
